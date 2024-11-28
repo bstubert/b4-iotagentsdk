@@ -31,18 +31,13 @@
 #include <QtQml/QQmlApplicationEngine>
 #include <QtQml/QQmlContext>
 
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QMessageBox>
-#include <QtWidgets/QWidget>
-
+#include <QtGui/QGuiApplication>
 #include <QtQuick/QQuickWindow>
 
 #include <iostream>
 #include <memory>
 
 #include "AppModel.h"
-
-#include "ui_WidgetsDemoWindow.h"
 
 #include "QRCodeImageProvider.h"
 
@@ -56,75 +51,13 @@ constexpr auto EglfsPlatformName = "eglfs";
 Q_IMPORT_PLUGIN(TVQtRCPlugin);
 #endif
 
-
-class WidgetDemoWindow : public QWidget
-{
-public:
-	WidgetDemoWindow(QWidget* parent = nullptr) : QWidget(parent)
-	{
-		m_ui.setupUi(this);
-
-		QObject::connect(
-			m_ui.pbMessageBox,
-			&QPushButton::clicked,
-			this,
-			[this]()
-			{
-				QMessageBox::information(
-					this,
-					QStringLiteral("Test message box"),
-					QStringLiteral("Test message"),
-					QMessageBox::Yes | QMessageBox::No);
-			});
-
-		m_timer.setInterval(10);
-		QObject::connect(
-			&m_timer,
-			&QTimer::timeout,
-			this,
-			[this]()
-			{
-				const int val = m_ui.progressBar->value();
-				if (val == m_ui.progressBar->maximum())
-				{
-					m_ui.progressBar->reset();
-				}
-				m_ui.progressBar->setValue(val + 1);
-			});
-
-		m_ui.pbAnimation->setStyleSheet("QPushButton { background-color: yellow } "
-										"QPushButton:pressed { border-width: 2px; border-style: outset; border-color: green; } "
-										"QPushButton:hover { background-color: purple } ");
-
-		QObject::connect(
-			m_ui.pbAnimation,
-			&QPushButton::clicked,
-			this,
-			[this]()
-			{
-				if (m_timer.isActive())
-				{
-					m_timer.stop();
-				}
-				else
-				{
-					m_timer.start();
-				}
-			});
-	}
-
-private:
-	Ui::WidgetsDemoWindow m_ui;
-	QTimer m_timer;
-};
-
 int main(int argc, char *argv[])
 {
 #if defined(Q_OS_WIN)
 	QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
 
-	QApplication app{argc, argv};
+	QGuiApplication app{argc, argv};
 
 	QCoreApplication::setApplicationName(ApplicationName);
 	QCoreApplication::setApplicationVersion(ApplicationVersion);
@@ -142,12 +75,6 @@ int main(int argc, char *argv[])
 
 	QCommandLineOption setAgentAPIUrlOption(QStringList() << "a" << "agent-api-url", "Set IoT Agent URL", "agent-api-url");
 	commandlineParser.addOption(setAgentAPIUrlOption);
-
-	QCommandLineOption forceMainWindowOption("main-only", "Only create main application window.");
-	commandlineParser.addOption(forceMainWindowOption);
-
-	QCommandLineOption forceQWidgetsOption("qwidget-only", "Only create widget-based window(s).");
-	commandlineParser.addOption(forceQWidgetsOption);
 
 	QCommandLineOption rcModeOption("control-mode", "Only create widget-based window(s).", "control-mode");
 	commandlineParser.addOption(rcModeOption);
@@ -244,38 +171,19 @@ int main(int argc, char *argv[])
 
 	std::unique_ptr<QQmlApplicationEngine> engine;
 
-	const bool createQmlMainWindow = !commandlineParser.isSet(forceQWidgetsOption);
+	engine.reset(new QQmlApplicationEngine);
 
-	if (createQmlMainWindow)
+	// provide application model with TeamViewer Plugin
+	auto appModel = new AppModel(plugin, engine.get());
+	engine->rootContext()->setContextProperty("appModel", appModel);
+
+	engine->addImageProvider("qrcode", new QRCodeImageProvider);
+
+	// Load QML UI
+	engine->load(QUrl(QStringLiteral("qrc:/main.qml")));
+	if (engine->rootObjects().isEmpty())
 	{
-		engine.reset(new QQmlApplicationEngine);
-
-		// provide application model with TeamViewer Plugin
-		auto appModel = new AppModel(plugin, engine.get());
-		engine->rootContext()->setContextProperty("appModel", appModel);
-
-		engine->addImageProvider("qrcode", new QRCodeImageProvider);
-
-		// Load QML UI
-		engine->load(QUrl(QStringLiteral("qrc:/main.qml")));
-		if (engine->rootObjects().isEmpty())
-		{
-			return EXIT_FAILURE;
-		}
-	}
-
-	// NOTE: When using the EGLFS platform mixing QtQuick and QtWidget based windows is not possible and will result in
-	// aborting the application. Therefore, we disable the QtWidget-based demo window here for EGLFS.
-	const bool createWidgetTestWindow =
-		!createQmlMainWindow ||
-		(QGuiApplication::platformName() != EglfsPlatformName && !commandlineParser.isSet(forceMainWindowOption));
-
-	std::unique_ptr<WidgetDemoWindow> demoAppWidget;
-
-	if (createWidgetTestWindow)
-	{
-		demoAppWidget.reset(new WidgetDemoWindow());
-		demoAppWidget->show();
+		return EXIT_FAILURE;
 	}
 
 	plugin->registerApplication();
