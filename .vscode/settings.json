@@ -1,5 +1,5 @@
 {
-    "cmake.buildDirectory": "${workspaceFolder}/../build-${buildKit}/b4-bsp",
+    "cmake.buildDirectory": "${workspaceFolder}/../build-${buildKit}/b4-iotagentsdk",
     "cmake.configureSettings": {
         "QT_MAJOR_VERSION": 6,
         "CMAKE_PREFIX_PATH": [
