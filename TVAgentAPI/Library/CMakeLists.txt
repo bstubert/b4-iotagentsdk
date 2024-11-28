@@ -83,9 +83,6 @@ set(TVAgentApi_SOURCES
 )
 
 add_library(${PROJECT_NAME}.interface INTERFACE)
-set_target_properties(${PROJECT_NAME} PROPERTIES
-	VERSION 2.7.5
-	SOVERSION 2)
 target_include_directories(${PROJECT_NAME}.interface INTERFACE
 	$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/export>
 	$<INSTALL_INTERFACE:include>)
@@ -93,6 +90,9 @@ target_include_directories(${PROJECT_NAME}.interface INTERFACE
 option(BUILD_SHARED_LIBS "Build the plugin as a shared lib" ON)
 
 add_library(${PROJECT_NAME} ${TVAgentApi_INTERFACE} ${TVAgentApi_SOURCES})
+set_target_properties(${PROJECT_NAME} PROPERTIES
+	VERSION 2.7.5
+	SOVERSION 2)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/internal)
 target_link_libraries(${PROJECT_NAME} PUBLIC ${PROJECT_NAME}.interface)
 target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic -Wshadow)
