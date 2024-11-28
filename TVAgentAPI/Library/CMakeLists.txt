@@ -83,6 +83,9 @@ set(TVAgentApi_SOURCES
 )
 
 add_library(${PROJECT_NAME}.interface INTERFACE)
+set_target_properties(${PROJECT_NAME} PROPERTIES
+	VERSION 2.7.5
+	SOVERSION 2)
 target_include_directories(${PROJECT_NAME}.interface INTERFACE
 	$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/export>
 	$<INSTALL_INTERFACE:include>)
