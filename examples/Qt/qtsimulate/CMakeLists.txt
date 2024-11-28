@@ -41,6 +41,7 @@ add_executable(qt_simulate
 	"ThirdParty/qrcodegen.cpp"
 )
 
+target_include_directories(qt_simulate PRIVATE ../../../TVQtRC/Library/export)
 target_link_libraries(qt_simulate Qt${QT_MAJOR_VERSION}::Core Qt${QT_MAJOR_VERSION}::Gui Qt${QT_MAJOR_VERSION}::Quick)
 
 install(TARGETS qt_simulate
