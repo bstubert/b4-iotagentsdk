@@ -53,3 +53,7 @@ if(BUILD_SHARED_LIBS)
 else()
 	target_link_libraries(qt_simulate TVQtRC)
 endif()
+
+install(TARGETS qt_simulate
+	EXPORT ${TV_PACKAGE_NAME}
+	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
