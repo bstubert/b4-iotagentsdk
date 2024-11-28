@@ -28,7 +28,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-find_package(TVAgentSDK 2.0 REQUIRED)
+# find_package(TVAgentSDK 2.0 REQUIRED)
 find_package(Qt${QT_MAJOR_VERSION} COMPONENTS Core Gui Quick REQUIRED)
 
 add_executable(qt_simulate
@@ -42,7 +42,7 @@ add_executable(qt_simulate
 	"ThirdParty/qrcodegen.cpp"
 )
 
-target_link_libraries(qt_simulate TVAgentSDK::TVQtRC.interface Qt${QT_MAJOR_VERSION}::Core Qt${QT_MAJOR_VERSION}::Gui Qt${QT_MAJOR_VERSION}::Quick)
+# target_link_libraries(qt_simulate TVAgentSDK::TVQtRC.interface Qt${QT_MAJOR_VERSION}::Core Qt${QT_MAJOR_VERSION}::Gui Qt${QT_MAJOR_VERSION}::Quick)
 
 install(TARGETS qt_simulate
 	EXPORT ${TV_PACKAGE_NAME}

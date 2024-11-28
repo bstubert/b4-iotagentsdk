@@ -117,7 +117,7 @@ add_subdirectory(TVAgentAPIPrivate)
 
 if(ENABLE_QT_PLUGIN)
 	add_subdirectory(TVQtRC)
-	add_subdirectory(examples/Qt)
+	# add_subdirectory(examples/Qt)
 endif()
 
 add_subdirectory(examples/cpp)
