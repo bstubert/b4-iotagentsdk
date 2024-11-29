@@ -92,6 +92,9 @@ set(TVQTRC_SOURCES
 set_property(SOURCE internal/TVQtRCPlugin.cpp APPEND PROPERTY COMPILE_DEFINITIONS "TV_VERSION=\"${TVAgentSDK_VERSION}\"")
 
 add_library(${PROJECT_NAME}.interface INTERFACE)
+set_target_properties(${PROJECT_NAME}.interface PROPERTIES
+	VERSION 2.7.5
+	SOVERSION 2)
 target_include_directories(${PROJECT_NAME}.interface INTERFACE
 	$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/export>
 	$<INSTALL_INTERFACE:include>)
