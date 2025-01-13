@@ -26,7 +26,7 @@ project(TVQtRC)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 
-find_package(Qt${QT_MAJOR_VERSION} ${QT${QT_MAJOR_VERSION}_VERSION} COMPONENTS Core Gui Quick Widgets REQUIRED)
+find_package(Qt${QT_MAJOR_VERSION} ${QT${QT_MAJOR_VERSION}_VERSION} COMPONENTS Core Gui Quick REQUIRED)
 option(WIDGETS_EVENT_DRIVEN_GRABBING "Enable event-driven grabbing to reduce CPU consumption. \
 	Works only with the Qt widget-based windows, requires the private QtWidgets headers" OFF)
 if(WIDGETS_EVENT_DRIVEN_GRABBING)
