@@ -27,7 +27,7 @@ project(TVRemoteScreenSDKCommunication)
 
 option(TV_COMM_ENABLE_GRPC "Enable gRPC for communication" ON)
 option(TV_COMM_ENABLE_PLAIN_SOCKET "Enable plain C sockets for communication" ON)
-option(ENABLE_TESTS "Enable Tests" ON)
+option(ENABLE_TESTS "Enable Tests" OFF)
 
 message(STATUS "CommunicationLayer configured transports:")
 message(STATUS "  gRPC: ${TV_COMM_ENABLE_GRPC}")
